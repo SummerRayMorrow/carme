@@ -203,7 +203,8 @@ class Packager:
             self.zip_path = cache_path
         else:
             try:
-                if mimetypes.guess_type(self.download_URL)[0] == "application/zip":
+                mimetype = mimetypes.guess_type(self.download_URL)[0]
+                if mimetype == "application/zip" or mimetype == "application/x-zip-compressed":
                     urlretrieve(self.download_URL, cache_path)
                     self.zip_path = cache_path
                 else:
