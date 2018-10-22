@@ -153,7 +153,7 @@ class Packager:
         for i in inters:
             if i not in MERGE_LIST:
                 logging.warning("File '" + i + "' already exists. Backing up and proceeding.")
-                os.rename(i, i + ".bak")
+                os.replace(i, i + ".bak")
 
 
         # Copy all the files making directories as necessary
