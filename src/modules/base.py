@@ -1,8 +1,8 @@
 """
 Variables and Functions used by multiple CLI commands
 """
-import os, subprocess, logging, ruamel.yaml,  urllib.request
-from subprocess import call, DEVNULL, Popen
+import os, subprocess, platform, logging, ruamel.yaml,  urllib.request
+from subprocess import call, run, DEVNULL, Popen
 from os import path, pardir,getcwd
 from .yamltools import *
 
@@ -57,12 +57,20 @@ def bash_command(command, syntax, error="error"):
     try:
         print("Executing "+command+":\n", syntax)
         #result=subprocess.Popen([git, init], cwd=get_project_root())
-        result= subprocess.call(syntax, shell=True, executable='/bin/bash')
-        return result
+        if(os.path.isfile('/bin/bash')):
+            bash = '/bin/bash'
+        else:
+            is32bit = (platform.architecture()[0] == '32bit')
+            system32 = os.path.join(os.environ['SystemRoot'], 
+                'SysNative' if is32bit else 'System32')
+            bash = os.path.join(system32, 'bash.exe')
+        completed = subprocess.run(syntax, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, executable=bash)
+        logging.info(completed.stdout)
+        logging.error(completed.stderr)
+        return completed.returncode
     except subprocess.CalledProcessError as e:
         print(error)
     return(e.output.decode("utf-8"))
-
 
 def git_log2(number=1, flags=['--format=%h']):
 
