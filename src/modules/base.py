@@ -59,14 +59,16 @@ def bash_command(command, syntax, error="error"):
         #result=subprocess.Popen([git, init], cwd=get_project_root())
         if(os.path.isfile('/bin/bash')):
             bash = '/bin/bash'
+            completed = subprocess.run(syntax, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, executable=bash)
         else:
             is32bit = (platform.architecture()[0] == '32bit')
-            system32 = os.path.join(os.environ['SystemRoot'], 
-                'SysNative' if is32bit else 'System32')
+            system32 = os.path.join(os.environ['SystemRoot'],'SysNative' if is32bit else 'System32')
             bash = os.path.join(system32, 'bash.exe')
-        completed = subprocess.run(syntax, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, executable=bash)
-        logging.info(completed.stdout)
-        logging.error(completed.stderr)
+            completed = subprocess.run('"%s" -c "%s"' % (bash, syntax), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if(completed.stdout):
+            logging.info(completed.stdout)
+        if(completed.stderr):
+            logging.error(completed.stderr)
         return completed.returncode
     except subprocess.CalledProcessError as e:
         print(error)
