@@ -4,13 +4,8 @@ decorator==4.2.1
 docker==3.0.0
 docker-pycreds==0.2.1
 docopt==0.6.1
-fullpath==0.0.34
-getclass==0.0.37
 gitdb==0.6.4
 idna==2.6
-isclassmethod==0.0.31
-isstaticmethod==0.0.29
-isstring==0.0.31
 nbconvert==5.3.*
 ordereddict==1.1
 public==0.0.65
